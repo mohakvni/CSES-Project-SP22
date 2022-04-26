@@ -61,6 +61,54 @@ class Spotify:
         auth_response_data = auth_response.json()
         access_token = auth_response_data['access_token']
         return access_token
+    def get_songs(self, genres, artists) -> list:
+        ultimate = []
+        if genres:
+            for k in genres:
+                for i in range(10, 150, 10):
+                    try:
+                        params = "q=genre:{genre}&type=track&limit=10&offset={offset}".format(genre = k, offset = i)
+                        endpoint_url = "https://api.spotify.com/v1/search?{}".format(params)
+                        response  = requests.get(url = endpoint_url, headers=self.set_headers())
+                        res = response.json()
+                        result = res['tracks']['items']
+                        for j in result:
+                            if (j['uri'] not in ultimate):
+                                ultimate.append(j['uri'])
+                    except:
+                        continue
+        if artists:
+            for k in genres:
+                for i in range(10, 150, 10):
+                    try:
+                        params = "q=artist:{artist}&type=track&limit=10&offset={offset}".format(artist = k, offset = i)
+                        endpoint_url = "https://api.spotify.com/v1/search?{}".format(params)
+                        response  = requests.get(url = endpoint_url, headers=self.set_headers())
+                        res = response.json()
+                        result = res['tracks']['items']
+                        for j in result:
+                            if (j['uri'] not in ultimate):
+                                ultimate.append(j['uri'])
+                    except:
+                        continue
+        
+        return ultimate
+
+    def create_csv(self, genre, artist) -> None:
+        newcsv = open("Songs.csv", "w")
+        writer = csv.writer(newcsv)
+        writer.writerow(["index", "tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"])
+        songs_array = self.get_songs(genres=genre, artists=artist)
+        song_index = 1
+        for i in range(len(songs_array)):
+            endpoint_url = "https://api.spotify.com/v1/audio-features/{id}".format(id = songs_array[i][14:])
+            res = requests.get(url= endpoint_url, headers=self.set_headers())
+            response = res.json()
+            keys = [song_index, response["tempo"],response["instrumentalness"],response['danceability'],response['mode'],response['time_signature'],response['key']]
+            writer.writerow(keys)
+            song_index += 1
+    
+    
 
         
 
