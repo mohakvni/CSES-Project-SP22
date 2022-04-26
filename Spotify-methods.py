@@ -108,7 +108,15 @@ class Spotify:
             writer.writerow(keys)
             song_index += 1
     
-    
+    def get_UserID(self):
+        response = requests.get("https://api.spotify.com/v1/me", headers = self.set_headers())
+        content = response.json()
+        return content["id"]
+
+    def add_to_queue(self) -> None :
+        res = requests.get("https://api.spotify.com/v1/me/player", headers=self.set_headers()).json()
+        if(res['device']['is_active']):
+            device = res['device']['id']
 
         
 
