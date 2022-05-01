@@ -61,11 +61,11 @@ class Spotify:
         auth_response_data = auth_response.json()
         access_token = auth_response_data['access_token']
         return access_token
-    def get_songs(self, genres, artists) -> list:
+    def get_songs(self, genres, artists, end=150) -> list:
         ultimate = []
-        if genres:
+        if len(genres)!=0:
             for k in genres:
-                for i in range(10, 150, 10):
+                for i in range(0, end, 10):
                     try:
                         params = "q=genre:{genre}&type=track&limit=10&offset={offset}".format(genre = k, offset = i)
                         endpoint_url = "https://api.spotify.com/v1/search?{}".format(params)
@@ -77,9 +77,9 @@ class Spotify:
                                 ultimate.append(j['uri'])
                     except:
                         continue
-        if artists:
-            for k in genres:
-                for i in range(10, 150, 10):
+        if len(artists)!=0:
+            for k in artists:
+                for i in range(0, end, 10):
                     try:
                         params = "q=artist:{artist}&type=track&limit=10&offset={offset}".format(artist = k, offset = i)
                         endpoint_url = "https://api.spotify.com/v1/search?{}".format(params)
@@ -94,19 +94,23 @@ class Spotify:
         
         return ultimate
 
-    def create_csv(self, genre, artist) -> None:
+    def create_csv(self, genre, artist, end=150) -> None:
         newcsv = open("Songs.csv", "w")
         writer = csv.writer(newcsv)
-        writer.writerow(["index", "tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"])
-        songs_array = self.get_songs(genres=genre, artists=artist)
+        writer.writerow(["index","Song_ID", "name", "artist","tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"])
+        songs_array = self.get_songs(genres=genre, artists=artist, end=end)
         song_index = 1
         for i in range(len(songs_array)):
-            endpoint_url = "https://api.spotify.com/v1/audio-features/{id}".format(id = songs_array[i][14:])
-            res = requests.get(url= endpoint_url, headers=self.set_headers())
-            response = res.json()
-            keys = [song_index, response["tempo"],response["instrumentalness"],response['danceability'],response['mode'],response['time_signature'],response['key']]
-            writer.writerow(keys)
-            song_index += 1
+            try:
+                id_song = songs_array[i][14:]
+                endpoint_url = f"https://api.spotify.com/v1/audio-features/{id_song}"
+                res = requests.get(url= endpoint_url, headers=self.set_headers())
+                response = res.json()
+                keys = [song_index, id_song, self.name(id_song), self.artist(id_song), response["tempo"],response["instrumentalness"],response['danceability'],response['mode'],response['time_signature'],response['key']]
+                writer.writerow(keys)
+                song_index += 1
+            except:
+                continue
     
     def get_UserID(self):
         response = requests.get("https://api.spotify.com/v1/me", headers = self.set_headers())
@@ -118,5 +122,19 @@ class Spotify:
         if(res['device']['is_active']):
             device = res['device']['id']
 
-        
+    # Helper Methods, do not touch
+    def name(self,id) -> str:
+        res = requests.get(f"https://api.spotify.com/v1/tracks/{id}", headers=self.set_headers()).json()
+        return res["name"]
+    
+    def artist(self,id) -> str:
+        res = requests.get(f"https://api.spotify.com/v1/tracks/{id}", headers=self.set_headers()).json()
+        artist_name=""
+        for artist in res["artists"]:
+            artist_name += artist["name"] + " "
+        return artist_name
+
+
+song = Spotify()
+song.create_csv(["jazz"],["Kanye West"], 20)
 
