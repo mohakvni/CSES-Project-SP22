@@ -5,8 +5,8 @@ import datetime
 import csv
 
 
-client_ID = '751958260f914aa39108549f185cc9fa' #add your own
-client_Secret = '778ac34bc84a410aaee35eb37fd3cedc' #add your own
+client_ID = '' #add your own
+client_Secret = '' #add your own
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
 def Get_access() -> tuple:
