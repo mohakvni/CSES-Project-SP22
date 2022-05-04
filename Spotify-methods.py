@@ -5,12 +5,12 @@ import datetime
 import csv
 
 
-client_ID = '' #add your own
-client_Secret = '' #add your own
+client_ID = '751958260f914aa39108549f185cc9fa' #add your own
+client_Secret = '778ac34bc84a410aaee35eb37fd3cedc' #add your own
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
 def Get_access() -> tuple:
-    scopes = "user-read-playback-state user-read-currently-playing"
+    scopes = "user-read-playback-state user-read-currently-playing user-modify-playback-state"
     webbrowser.open("https://accounts.spotify.com/authorize?response_type=code&client_id={CLIENT_ID}&scope={scope}&redirect_uri=https://google.com".format(CLIENT_ID = client_ID, scope = scopes))
     redirect = input("enter redirected url: ")
     code = redirect.split("=")[1]
@@ -117,10 +117,17 @@ class Spotify:
         content = response.json()
         return content["id"]
 
-    def add_to_queue(self) -> None :
+    def add_to_queue(self, songs) -> None :
         res = requests.get("https://api.spotify.com/v1/me/player", headers=self.set_headers()).json()
         if(res['device']['is_active']):
             device = res['device']['id']
+        for song in songs:
+            try:
+                url = "https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A{s}".format(s = song)
+                reponse = requests.post(url,headers=self.set_headers())
+                queue = reponse.json()
+            except:
+                continue
 
     # Helper Methods, do not touch
     def name(self,id) -> str:
@@ -136,5 +143,5 @@ class Spotify:
 
 
 song = Spotify()
-song.create_csv(["jazz"],["Kanye West"], 20)
+song.add_to_queue(['2grjqo0Frpf2okIBiifQKs', '41C80kNQRH0dkZXgqd17C6'])
 
