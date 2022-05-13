@@ -1,0 +1,11 @@
+index,Song_ID,name,artist,tempo,instrumentalness,danceability,mode,time_signature,key
+1,0y60itmpH0aPKsFiGxmtnh,Wait a Minute!,WILLOW ,101.003,1.94e-05,0.764,0,4,3
+2,6YbhspuOar1D9WSSnfe7ds,"Young, Wild & Free (feat. Bruno Mars)",Snoop Dogg Wiz Khalifa Bruno Mars ,94.505,0,0.553,1,4,0
+3,1ri9ZUkBJVFUdgwzCnfcYs,MAMIII,Becky G KAROL G ,93.991,0,0.843,0,4,4
+4,7gSQv1OHpkIoAdUiRLdmI6,I Won't Back Down,Tom Petty ,114.02,2.76e-06,0.765,1,4,7
+5,2QjOHCTQ1Jl3zawyYOpxh6,Sweater Weather,The Neighbourhood ,124.053,0.0177,0.612,1,4,10
+6,1uXbwHHfgsXcUKfSZw5ZJ0,Run the World (Girls),Beyoncé ,127.086,4.72e-05,0.733,1,4,0
+7,37y7iDayfwm3WXn5BiAoRk,Dark Red,Steve Lacy ,172.041,7.96e-06,0.603,1,4,6
+8,1Wrzhfa5bNlqvsnCztz190,Devuélveme a mi chica,Hombres G ,172.676,0.0337,0.603,0,4,9
+9,0e8nrvls4Qqv5Rfa2UhqmO,THATS WHAT I WANT,Lil Nas X ,87.981,0,0.737,0,4,1
+10,3fH4KjXFYMmljxrcGrbPj9,Don't You (Forget About Me),Simple Minds ,111.346,0.0181,0.66,1,4,2

@@ -14,23 +14,18 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+import os
 
 # IGNORE: For debugging
 # csv = "Songs.csv"
 # num_songs = 5
 
-def similar_songs(csv, num_songs) -> pd.DataFrame:
-    
-    # Reads csv file
-    try:
-        songs = pd.read_csv(csv)
-    except:
-        raise Exception("File not found. Add a csv file by runnning Spotify-methods.py")
-    
+def similar_songs(songs, num_songs) -> pd.DataFrame:
+
     # Retrieves original song from first index and saves song id
     og_song = songs.iloc[0, :]
     
-    print("Original song: " + og_song["name"] + " by " + og_song["artist"] + "\n")
+    # print("Original song: " + og_song["name"] + " by " + og_song["artist"] + "\n")
     
     # Detects numerical data in file
     features = np.array(songs.iloc[:, 4:])
@@ -56,15 +51,15 @@ def similar_songs(csv, num_songs) -> pd.DataFrame:
         )
         kmeans.fit(scaled_features)
         
-        print(f"Iteration #{iteration}")
-        print("Number of clusters: " + str(num_clusters))
-        print("Inertia: " + str(kmeans.inertia_))
+        # print(f"Iteration #{iteration}")
+        # print("Number of clusters: " + str(num_clusters))
+        # print("Inertia: " + str(kmeans.inertia_))
         
         songs["Label"] = kmeans.labels_
         og_label = songs.iloc[0, -1]
         similar_songs = songs[songs.Label == og_label]
         num_collected_songs = similar_songs.shape[0] - 1
-        print("Number of songs: " + str(num_collected_songs) + "\n")
+        # print("Number of songs: " + str(num_collected_songs) + "\n")
         
         num_clusters -= 1
         
@@ -77,16 +72,38 @@ def similar_songs(csv, num_songs) -> pd.DataFrame:
     return similar_songs.iloc[1:, 1:4]
 
 # Testing
-print(similar_songs("Songs.csv", 6))
+# print(similar_songs("Songs.csv", 6))
+
+
+def helper_songs():
+    i = 0
+    while os.path.exists("temp_data/Songs{}.csv".format(i)):
+        csv = "temp_data/Songs{}.csv".format(i)
+        print(i)
+        try:
+            songs = pd.read_csv(csv)
+            shape = songs.shape
+            result = pd.DataFrame(similar_songs(songs, min(shape[0], 5)))
+            if i > 0:
+                result.to_csv("Queue.csv", mode = "a", index = True, header = False)
+            else:
+                print("hello")
+                result.to_csv("Queue.csv")
+            os.remove(csv)
+            i += 1
+        except:
+             continue
+        
 
     
 # METHOD 2: Find relevant songs given the initial cluster size and then move
 # onto the next set of songs within the same genre
 #
-# More time-intensive but it doesnot really matter because there will always be
+# More space-intensive but it doesn't really matter because there will always be
 # at least one other song queued up. Also, it will allow us to find a better
 # pool of songs
 # TODO
+
 
 
 

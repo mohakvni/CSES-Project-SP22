@@ -3,10 +3,12 @@ import json
 import webbrowser
 import datetime
 import csv
+import os
+from ClusteringSongs import helper_songs
+import threading
 
-
-client_ID = '' #add your own
-client_Secret = '' #add your own
+client_ID = '0a6420c1d9094c1d81b4b5097d6cd3f1' #add your own
+client_Secret = 'ac4a6d6c55d3445788c79503d23f64c8' #add your own
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
 def Get_access() -> tuple:
@@ -33,6 +35,7 @@ class Spotify:
     refresh_token: str
     created: datetime.datetime
     expires: datetime.datetime
+    num_csvs = 0
 
 
     def __init__(self) -> None:
@@ -61,13 +64,14 @@ class Spotify:
         auth_response_data = auth_response.json()
         access_token = auth_response_data['access_token']
         return access_token
-    def get_songs(self, genres, artists, end=150) -> list:
+    def get_songs(self, genres, artists, start=0, end=150) -> list:
         ultimate = []
         if len(genres)!=0:
             for k in genres:
-                for i in range(0, end, 10):
+                interval = min(int(end - start), 10)
+                for i in range(start, end, interval):
                     try:
-                        params = "q=genre:{genre}&type=track&limit=10&offset={offset}".format(genre = k, offset = i)
+                        params = "q=genre:{genre}&type=track&limit={inter}&offset={offset}".format(genre = k, inter=interval, offset = i)
                         endpoint_url = "https://api.spotify.com/v1/search?{}".format(params)
                         response  = requests.get(url = endpoint_url, headers=self.set_headers())
                         res = response.json()
@@ -94,11 +98,12 @@ class Spotify:
         
         return ultimate
 
-    def create_csv(self, genre, artist, end=150) -> None:
-        newcsv = open("Songs.csv", "w")
+    def create_csv(self, genre, artist, start=0, end=150) -> None:
+        newcsv = open("temp_data/Songs{}.csv".format(Spotify.num_csvs), "w")
+        Spotify.num_csvs += 1
         writer = csv.writer(newcsv)
         writer.writerow(["index","Song_ID", "name", "artist","tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"])
-        songs_array = self.get_songs(genres=genre, artists=artist, end=end)
+        songs_array = self.get_songs(genres=genre, artists=artist, start=start, end=end)
         song_index = 1
         for i in range(len(songs_array)):
             try:
@@ -135,6 +140,35 @@ class Spotify:
         return artist_name
 
 
-song = Spotify()
-song.create_csv(["jazz"],["Kanye West"], 20)
+def helper(interval, num_songs):
+    song = Spotify()
+    genre = input("Enter genre: ").lower()
+    for i in range(0, num_songs, interval):
+        j = min(num_songs, i+interval)
+        song.create_csv([genre], [], i, j)
+        
+if __name__ == "__main__":
+    # TODO: MULTI-THREADING
+    
+    # creating thread
+    # t1 = threading.Thread(target=helper_songs, args=())
+    # t2 = threading.Thread(target=helper, args=(10, 100))
+  
+    # # starting thread 1
+    # t1.start()
+    # # starting thread 2
+    # t2.start()
+  
+    # # wait until thread 1 is completely executed
+    # t1.join()
+    # # wait until thread 2 is completely executed
+    # t2.join()
+    
+    helper(10, 100)
+    helper_songs()
+  
+    # both threads completely executed
+    print("Done!")
+
+
 

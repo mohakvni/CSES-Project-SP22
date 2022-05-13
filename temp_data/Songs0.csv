@@ -1,0 +1,11 @@
+index,Song_ID,name,artist,tempo,instrumentalness,danceability,mode,time_signature,key
+1,4LRPiXqCikLlN15c3yImP7,As It Was,Harry Styles ,173.93,0.00101,0.52,0,4,6
+2,6OnfBiiSc9RGKiBKKtZXgQ,We Built This City,Starship ,144.091,0,0.661,1,4,5
+3,6Uj1ctrBOjOas8xZXGqKk4,Woman,Doja Cat ,107.998,0.00294,0.824,0,4,5
+4,05wIrZSwuaVWhcv5FfqeH0,Walking On Sunshine,Katrina & The Waves ,109.902,0.173,0.596,1,4,10
+5,4ZtFanR9U6ndgddUvNcjcG,good 4 u,Olivia Rodrigo ,166.928,0,0.563,1,4,9
+6,5yDL13y5giogKs2fSNf7sj,Glad You Came,The Wanted ,126.885,0,0.722,0,4,7
+7,3Vi5XqYrmQgOYBajMWSvCi,Need to Know,Doja Cat ,130.041,0,0.664,1,4,1
+8,5izGeTxueiFX1UPFGohY9w,Addicted To Love,Robert Palmer Eric 'ET' Thorngren ,111.617,5.89e-06,0.702,1,4,2
+9,59CfNbkERJ3NoTXDvoURjj,Boyfriend,Dove Cameron ,179.773,0,0.345,0,3,7
+10,78FHUZRbFDCG6VkRAQdFLm,Broken Wings,Mr. Mister ,99.162,4.57e-05,0.286,0,4,1
