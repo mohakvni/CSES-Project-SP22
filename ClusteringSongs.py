@@ -65,9 +65,9 @@ def similar_songs(songs, num_songs) -> pd.DataFrame:
         
         iteration += 1
     
-    if num_collected_songs < num_songs:
-        print("WARNING: maximum number of relevant songs reached")
-        print("Expand input csv")
+    # if num_collected_songs < num_songs:
+    #     print("WARNING: maximum number of relevant songs reached")
+    #     print("Expand input csv")
         
     return similar_songs.iloc[1:, 1:4]
 
@@ -77,18 +77,20 @@ def similar_songs(songs, num_songs) -> pd.DataFrame:
 
 def helper_songs():
     i = 0
+    while not os.path.exists("temp_data/Songs{}.csv".format(i)):
+        continue
     while os.path.exists("temp_data/Songs{}.csv".format(i)):
+        print("Entered")
         csv = "temp_data/Songs{}.csv".format(i)
-        print(i)
         try:
             songs = pd.read_csv(csv)
             shape = songs.shape
             result = pd.DataFrame(similar_songs(songs, min(shape[0], 5)))
             if i > 0:
-                result.to_csv("Queue.csv", mode = "a", index = True, header = False)
+                result.to_csv("Queue.csv", mode = "a", index = False, header = False)
             else:
-                print("hello")
-                result.to_csv("Queue.csv")
+                # print("hello")
+                result.to_csv("Queue.csv", index = False)
             os.remove(csv)
             i += 1
         except:
