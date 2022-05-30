@@ -7,6 +7,7 @@ import os
 from ClusteringSongs import helper_songs, similar_songs
 import threading
 import pandas as pd
+import time
 
 client_ID = '0a6420c1d9094c1d81b4b5097d6cd3f1' #add your own
 client_Secret = 'ac4a6d6c55d3445788c79503d23f64c8' #add your own
@@ -144,20 +145,31 @@ class Spotify:
 def helper(interval, num_songs):
     song = Spotify()
     genre = input("Enter genre: ").lower()
+    total_num_songs = 0
     for i in range(0, num_songs, interval):
         j = min(num_songs, i+interval)
         song.create_csv([genre], [], i, j)
         ind = Spotify.num_csvs - 1
         csv = "temp_data/Songs{}.csv".format(ind)
-        songs = pd.read_csv(csv)
-        shape = songs.shape
-        result = pd.DataFrame(similar_songs(songs, min(shape[0], 5)))
-        if ind > 0:
-            result.to_csv("Queue.csv", mode = "a", index = False, header = False)
-        else:
-            # print("hello")
-            result.to_csv("Queue.csv", index = False)
+        try:
+            songs = pd.read_csv(csv)
+            shape = songs.shape
+            result = pd.DataFrame(similar_songs(songs, min(shape[0], 1)))
+            if ind > 0:
+                result.to_csv("Queue.csv", mode = "a", index = False, header = False)
+            else:
+                result.to_csv("Queue.csv", index = False)
+            total_num_songs += result.shape[0]
+        except:
+             print("Empty")
+        if total_num_songs >= num_songs // interval:
+            temp_random = pd.read_csv("Queue.csv")
+            temp_random = temp_random[:num_songs//interval].to_csv("Queue.csv", index = False)
+            break
         os.remove(csv)
+    result
+    Spotify.num_csvs = 0
+    print(str(pd.read_csv("Queue.csv").shape[0]) + " songs added to queue")
         
 if __name__ == "__main__":
     # TODO: MULTI-THREADING
@@ -180,7 +192,7 @@ if __name__ == "__main__":
     # helper_songs()
   
     # both threads completely executed
-    print("Done!")
+    # print("Done!")
 
 
 
