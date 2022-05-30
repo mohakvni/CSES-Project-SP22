@@ -1,0 +1,11 @@
+index,Song_ID,name,artist,tempo,instrumentalness,danceability,mode,time_signature,key
+1,58ge6dfP91o9oXMzq3XkIS,505,Arctic Monkeys ,140.267,5.79e-05,0.52,1,4,0
+2,1r9xUipOqoNwggBpENDsvJ,Enemy (with JID) - from the series Arcane League of Legends,Imagine Dragons JID Arcane League of Legends ,77.011,0,0.728,0,4,11
+3,2QjOHCTQ1Jl3zawyYOpxh6,Sweater Weather,The Neighbourhood ,124.053,0.0177,0.612,1,4,10
+4,2K7xn816oNHJZ0aVqdQsha,Softcore,The Neighbourhood ,93.986,0.000417,0.575,0,4,9
+5,5E30LdtzQTGqRvNd7l6kG5,Daddy Issues,The Neighbourhood ,85.012,0.149,0.588,1,4,10
+6,0ofHAoxe9vBkTCp2UQIavz,Dreams - 2004 Remaster,Fleetwood Mac ,120.151,0.00428,0.828,1,4,0
+7,2tznHmp70DxMyr2XhWLOW0,Cigarette Daydreams,Cage The Elephant ,113.98,0,0.636,1,4,2
+8,2GiJYvgVaD2HtM8GqD9EgQ,Electric Love,BØRNS ,120.041,0.00137,0.611,0,4,6
+9,2iUmqdfGZcHIhS3b9E9EWq,Everybody Talks,Neon Trees ,154.961,0,0.471,1,4,8
+10,1nFtiJxYdhtFfFtfXBv06s,Something In The Way,Nirvana ,105.218,0.263,0.427,1,4,8
