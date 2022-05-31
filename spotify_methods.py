@@ -172,11 +172,14 @@ class Spotify:
     
     def get_genre(self):
         current_song = self.get_current_song()
+        genres = []
         track_info = (requests.get("https://api.spotify.com/v1/tracks/{id}".format(id=current_song), headers = self.set_headers())).json()
-        album_id = track_info["album"]["uri"][14:]
-        album_info = (requests.get("https://api.spotify.com/v1/albums/{id}".format(id=album_id), headers = self.set_headers())).json()
-        
-
+        for i in track_info["artists"]:
+            try:
+                genres += i["genres"]
+            except:
+                continue
+        return genres
         
 
 def helper(interval, num_songs):
@@ -237,10 +240,10 @@ if __name__ == "__main__":
     # t1.join()
     # # # wait until thread 2 is completely executed
     # t2.join()
-    helper(10, int(args[0]) * 10)
-    # songs = Spotify()
-    # print(songs.current_song_info(songs.get_current_song()))
-    # print(songs.name(songs.get_current_song()))
+    # helper(10, int(args[0]) * 10)
+    songs = Spotify()
+    print(songs.current_song_info(songs.get_current_song()))
+    print(songs.name(songs.get_current_song()))
   
     # both threads completely executed
     # print("Done!")
