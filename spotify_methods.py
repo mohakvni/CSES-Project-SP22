@@ -118,16 +118,6 @@ class Spotify:
                 song_index += 1
             except:
                 continue
-    
-    def get_UserID(self):
-        response = requests.get("https://api.spotify.com/v1/me", headers = self.set_headers())
-        content = response.json()
-        return content["id"]
-
-    def add_to_queue(self) -> None :
-        res = requests.get("https://api.spotify.com/v1/me/player", headers=self.set_headers()).json()
-        if(res['device']['is_active']):
-            device = res['device']['id']
 
     # Helper Methods, do not touch
     def name(self,id) -> str:
@@ -141,6 +131,23 @@ class Spotify:
             artist_name += artist["name"] + " "
         return artist_name
 
+    def get_current_song(self):
+        response = requests.get("https://api.spotify.com/v1/me/player/curretnly-playing", headers = self.set_headers()).json()
+        return response["data"]["externalUrl"][31:]
+    
+    def get_device_id(self) -> None :
+        res = requests.get("https://api.spotify.com/v1/me/player", headers=self.set_headers()).json()
+        if(res['device']['is_active']):
+            device = res['device']['id']
+            return device
+        else:
+            return None
+    
+    def get_UserID(self):
+        response = requests.get("https://api.spotify.com/v1/me", headers = self.set_headers())
+        content = response.json()
+        return content["id"]
+        
 
 def helper(interval, num_songs):
     song = Spotify()
