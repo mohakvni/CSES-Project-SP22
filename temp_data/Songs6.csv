@@ -1,11 +1,11 @@
 index,Song_ID,name,artist,tempo,instrumentalness,danceability,mode,time_signature,key
-1,07MDkzWARZaLEdKxo6yArG,Meet Me At Our Spot,THE ANXIETY WILLOW Tyler Cole ,94.995,0.000193,0.773,1,4,2
-2,1IxeJLsubGTboNN9K5XNfL,Wildest Dreams (Taylor's Version),Taylor Swift ,139.99,9.06e-05,0.587,1,4,8
-3,4gzsuuZypVbxs0Af1LSZyB,Lo Siento BB:/ (with Bad Bunny & Julieta Venegas),Tainy Bad Bunny Julieta Venegas ,169.888,1.78e-06,0.639,0,4,4
-4,2KdKh9vHbKW0tZLqtpxxI0,Honest (feat. Don Toliver),Justin Bieber Don Toliver ,150.002,8.16e-05,0.81,0,4,8
-5,60ynsPSSKe6O3sfwRnIBRf,Streets,Doja Cat ,90.035,0.0382,0.749,1,4,11
-6,0MMyJUC3WNnFS1lit5pTjk,"jealousy, jealousy",Olivia Rodrigo ,163.929,0,0.695,0,4,10
-7,4xqrdfXkTW4T0RauPLv3WA,Heather,Conan Gray ,102.078,0,0.357,1,3,5
-8,6FE2iI43OZnszFLuLtvvmg,Classic,MKTO ,102.071,0,0.72,1,4,1
-9,1ZdhOMWyFR8Iv9eylMGYg2,Mount Everest,Labrinth ,87.724,0.0698,0.494,0,4,0
-10,3YJJjQPAbDT7mGpX3WtQ9A,Good Days,SZA ,121.002,8.1e-06,0.436,0,4,1
+1,4xqrdfXkTW4T0RauPLv3WA,Heather,Conan Gray ,102.078,0,0.357,1,3,5
+2,6Jkm5kUldvIqxzI1Pa7nXH,10 Things I Hate About You,Leah Kate ,153.967,0,0.544,1,4,8
+3,7fBv7CLKzipRk6EC6TWHOB,The Hills,The Weeknd ,113.003,0,0.585,0,4,0
+4,60ynsPSSKe6O3sfwRnIBRf,Streets,Doja Cat ,90.035,0.0382,0.749,1,4,11
+5,5Q0Nhxo0l2bP3pNjpGJwV1,Party In The U.S.A.,Miley Cyrus ,96.021,0.000115,0.652,0,4,10
+6,3YJJjQPAbDT7mGpX3WtQ9A,Good Days,SZA ,121.002,8.1e-06,0.436,0,4,1
+7,3DarAbFujv6eYNliUTyqtz,Kiss Me More (feat. SZA),Doja Cat SZA ,110.97,8.92e-05,0.764,1,4,8
+8,3w3y8KPTfNeOKPiqUTakBh,Locked out of Heaven,Bruno Mars ,143.994,0,0.726,1,4,5
+9,0rKtyWc8bvkriBthvHKY8d,SLOW DANCING IN THE DARK,Joji ,88.964,0.00598,0.515,1,4,3
+10,161DnLWsx1i3u1JT05lzqU,Talking to the Moon,Bruno Mars ,145.867,0,0.498,0,4,1
