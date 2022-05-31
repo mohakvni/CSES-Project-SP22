@@ -1,0 +1,10 @@
+index,Song_ID,name,artist,tempo,instrumentalness,danceability,mode,time_signature,key
+1,4JeOesjcWWlprTAvucDSJX,People Watching,Conan Gray ,125.723,0,0.53,1,4,5
+2,1c8gk2PeTE04A1pIDH9YMk,Rolling in the Deep,Adele ,104.948,0,0.73,1,4,8
+3,527k23H0A4Q0UJN3vGs0Da,After Party,Don Toliver ,162.948,0.331,0.629,1,4,5
+4,37Nqx7iavZpotJSDXZWbJ3,Girls Want Girls (with Lil Baby),Drake Lil Baby ,86.975,0,0.767,0,4,7
+5,64lsIF5pw0sJY0gV5kz0RN,Can I Call You Tonight?,Dayglow ,129.98,0.91,0.641,1,4,9
+6,1BxfuPKGuaTgP7aM0Bbdwr,Cruel Summer,Taylor Swift ,169.994,2.06e-05,0.552,1,4,9
+7,2bLqfJjuC5syrsgDsZfGmn,The Way I Are,Timbaland Keri Hilson D.O.E. ,114.759,0.751,0.731,0,4,3
+8,2P91MQbaiQOfbiz9VqhqKQ,I Like Me Better,Lauv ,91.97,2.55e-06,0.752,1,4,9
+9,5Hroj5K7vLpIG4FNCRIjbP,Best Day Of My Life,American Authors ,100.012,0.000262,0.673,1,4,2

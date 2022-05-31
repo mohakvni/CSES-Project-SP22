@@ -4,17 +4,18 @@ import webbrowser
 import datetime
 import csv
 import os
-from ClusteringSongs import helper_songs, similar_songs
+from ClusteringSongs import similar_songs
 import threading
 import pandas as pd
 import time
+import sys
 
 client_ID = '0a6420c1d9094c1d81b4b5097d6cd3f1' #add your own
 client_Secret = 'ac4a6d6c55d3445788c79503d23f64c8' #add your own
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
 def Get_access() -> tuple:
-    scopes = "user-read-playback-state user-read-currently-playing"
+    scopes = "user-read-playback-state user-read-currently-playing user-modify-playback-state"
     webbrowser.open("https://accounts.spotify.com/authorize?response_type=code&client_id={CLIENT_ID}&scope={scope}&redirect_uri=https://google.com".format(CLIENT_ID = client_ID, scope = scopes))
     redirect = input("enter redirected url: ")
     code = redirect.split("=")[1]
@@ -104,8 +105,13 @@ class Spotify:
         newcsv = open("temp_data/Songs{}.csv".format(Spotify.num_csvs), "w")
         Spotify.num_csvs += 1
         writer = csv.writer(newcsv)
-        writer.writerow(["index","Song_ID", "name", "artist","tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"])
+        columns = ["index","Song_ID", "name", "artist","tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"]
+        writer.writerow(columns)
+        song = Spotify()
+        curr_song_ID = song.get_current_song
         songs_array = self.get_songs(genres=genre, artists=artist, start=start, end=end)
+        temp_lst = [curr_song_ID]
+        temp_lst.extend(songs_array)
         song_index = 1
         for i in range(len(songs_array)):
             try:
@@ -119,19 +125,16 @@ class Spotify:
             except:
                 continue
 
-    def add_to_queue(self,songs):
-        device_id = self.get_device_id
+    def add_to_queue(self, songs):
+        # device_id = self.get_device_id
         for song in songs:
             try:
-                if (device_id != None):
-                    url = "https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A{s}&device_id={d}".format(s = song, d = device_id)
-                else:
-                    url = "https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A{s}".format(s = song)
+                url = "https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A{s}".format(s = song)
                 reponse = requests.post(url,headers=self.set_headers())
                 queue = reponse.json()
+                print(queue)
             except:
                 continue
-
 
     # Helper Methods, do not touch
     def name(self,id) -> str:
@@ -146,8 +149,9 @@ class Spotify:
         return artist_name
 
     def get_current_song(self):
-        response = requests.get("https://api.spotify.com/v1/me/player/curretnly-playing", headers = self.set_headers()).json()
-        return response["data"]["externalUrl"][31:]
+        response = requests.get("https://api.spotify.com/v1/me/player/currently-playing", headers = self.set_headers())
+        res = response.json()
+        return res['item']["uri"][14:]
 
     def current_song_info(self, song_id):
         response = requests.get("https://api.spotify.com/v1/audio-features/{id}".format(id = song_id), headers = self.set_headers()).json()
@@ -165,6 +169,13 @@ class Spotify:
         response = requests.get("https://api.spotify.com/v1/me", headers = self.set_headers())
         content = response.json()
         return content["id"]
+    
+    def get_genre(self):
+        current_song = self.get_current_song()
+        track_info = (requests.get("https://api.spotify.com/v1/tracks/{id}".format(id=current_song), headers = self.set_headers())).json()
+        album_id = track_info["album"]["uri"][14:]
+        album_info = (requests.get("https://api.spotify.com/v1/albums/{id}".format(id=album_id), headers = self.set_headers())).json()
+        
 
         
 
@@ -172,32 +183,45 @@ def helper(interval, num_songs):
     song = Spotify()
     genre = input("Enter genre: ").lower()
     total_num_songs = 0
-    for i in range(0, num_songs, interval):
+    end = False
+    i = 0
+    while total_num_songs < (num_songs // interval):
+    # for i in range(0, num_songs, interval):
         j = min(num_songs, i+interval)
         song.create_csv([genre], [], i, j)
         ind = Spotify.num_csvs - 1
         csv = "temp_data/Songs{}.csv".format(ind)
-        try:
+        try: 
             songs = pd.read_csv(csv)
             shape = songs.shape
             result = pd.DataFrame(similar_songs(songs, min(shape[0], 1)))
+            total_num_songs += result.shape[0]
+            if total_num_songs > (num_songs // interval):
+                num_needed = result.shape[0] - (total_num_songs - (num_songs // interval))
+                result = result.iloc[:num_needed]
+                end = True
+                total_num_songs = (num_songs // interval)
             if ind > 0:
                 result.to_csv("Queue.csv", mode = "a", index = False, header = False)
             else:
                 result.to_csv("Queue.csv", index = False)
-            total_num_songs += result.shape[0]
+            song.add_to_queue(list(result.Song_ID))
         except:
-             print("Empty")
-        if total_num_songs >= num_songs // interval:
-            temp_random = pd.read_csv("Queue.csv")
-            temp_random = temp_random[:num_songs//interval].to_csv("Queue.csv", index = False)
-            break
+            print("-")
+        # if total_num_songs >= num_songs // interval:
+        #     temp_random = pd.read_csv("Queue.csv")
+        #     temp_random = temp_random[:num_songs//interval].to_csv("Queue.csv", index = False)
+        #     break
         os.remove(csv)
-    result
+        print("Songs: {}/{}".format(total_num_songs, num_songs // interval))
+        if end:
+            break
+        i += interval
     Spotify.num_csvs = 0
-    print(str(pd.read_csv("Queue.csv").shape[0]) + " songs added to queue")
+    print(str(total_num_songs) + " songs added to queue")
         
 if __name__ == "__main__":
+    args = sys.argv[1:]
     # TODO: MULTI-THREADING
     
     # # creating thread
@@ -208,14 +232,15 @@ if __name__ == "__main__":
     # t1.start()
     # # # starting thread 2
     # t2.start()
-    
+
     # # # wait until thread 1 is completely executed
     # t1.join()
     # # # wait until thread 2 is completely executed
     # t2.join()
-    
-    helper(10, 100)
-    # helper_songs()
+    helper(10, int(args[0]) * 10)
+    # songs = Spotify()
+    # print(songs.current_song_info(songs.get_current_song()))
+    # print(songs.name(songs.get_current_song()))
   
     # both threads completely executed
     # print("Done!")
