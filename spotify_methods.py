@@ -119,6 +119,20 @@ class Spotify:
             except:
                 continue
 
+    def add_to_queue(self,songs):
+        device_id = self.get_device_id
+        for song in songs:
+            try:
+                if (device_id != None):
+                    url = "https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A{s}&device_id={d}".format(s = song, d = device_id)
+                else:
+                    url = "https://api.spotify.com/v1/me/player/queue?uri=spotify%3Atrack%3A{s}".format(s = song)
+                reponse = requests.post(url,headers=self.set_headers())
+                queue = reponse.json()
+            except:
+                continue
+
+
     # Helper Methods, do not touch
     def name(self,id) -> str:
         res = requests.get(f"https://api.spotify.com/v1/tracks/{id}", headers=self.set_headers()).json()
@@ -134,6 +148,10 @@ class Spotify:
     def get_current_song(self):
         response = requests.get("https://api.spotify.com/v1/me/player/curretnly-playing", headers = self.set_headers()).json()
         return response["data"]["externalUrl"][31:]
+
+    def current_song_info(self, song_id):
+        response = requests.get("https://api.spotify.com/v1/audio-features/{id}".format(id = song_id), headers = self.set_headers()).json()
+        return response
     
     def get_device_id(self) -> None :
         res = requests.get("https://api.spotify.com/v1/me/player", headers=self.set_headers()).json()
@@ -147,6 +165,7 @@ class Spotify:
         response = requests.get("https://api.spotify.com/v1/me", headers = self.set_headers())
         content = response.json()
         return content["id"]
+
         
 
 def helper(interval, num_songs):
