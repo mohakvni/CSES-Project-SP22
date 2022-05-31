@@ -7,8 +7,9 @@ import os
 from ClusteringSongs import similar_songs
 import threading
 import pandas as pd
-import time
 import sys
+import random
+from collections import Counter
 
 client_ID = '0a6420c1d9094c1d81b4b5097d6cd3f1' #add your own
 client_Secret = 'ac4a6d6c55d3445788c79503d23f64c8' #add your own
@@ -107,11 +108,18 @@ class Spotify:
         writer = csv.writer(newcsv)
         columns = ["index","Song_ID", "name", "artist","tempo", "instrumentalness", "danceability", "mode", "time_signature", "key"]
         writer.writerow(columns)
-        song = Spotify()
-        curr_song_ID = song.get_current_song
+        curr_song_ID = self.get_current_song()
         songs_array = self.get_songs(genres=genre, artists=artist, start=start, end=end)
+        try:
+            songs_array.remove(curr_song_ID)
+            print("Done")
+        except:
+            None
         temp_lst = [curr_song_ID]
         temp_lst.extend(songs_array)
+        songs_array = list(temp_lst)
+        # print(songs_array[:5])
+        # print(len(Counter(songs_array)), len(songs_array))
         song_index = 1
         for i in range(len(songs_array)):
             try:
@@ -151,7 +159,7 @@ class Spotify:
     def get_current_song(self):
         response = requests.get("https://api.spotify.com/v1/me/player/currently-playing", headers = self.set_headers())
         res = response.json()
-        return res['item']["uri"][14:]
+        return res['item']["uri"]
 
     def current_song_info(self, song_id):
         response = requests.get("https://api.spotify.com/v1/audio-features/{id}".format(id = song_id), headers = self.set_headers()).json()
@@ -171,12 +179,15 @@ class Spotify:
         return content["id"]
     
     def get_genre(self):
-        current_song = self.get_current_song()
+        current_song = self.get_current_song()[14:]
         genres = []
         track_info = (requests.get("https://api.spotify.com/v1/tracks/{id}".format(id=current_song), headers = self.set_headers())).json()
+        
         for i in track_info["artists"]:
+            artist_id = i["uri"][15:]
+            Artist_info = (requests.get("https://api.spotify.com/v1/artists/{id}".format(id=artist_id), headers = self.set_headers())).json()
             try:
-                genres += i["genres"]
+                genres += Artist_info["genres"]
             except:
                 continue
         return genres
@@ -184,7 +195,8 @@ class Spotify:
 
 def helper(interval, num_songs):
     song = Spotify()
-    genre = input("Enter genre: ").lower()
+    genres = song.get_genre()
+    genre = random.choice(genres).lower()
     total_num_songs = 0
     end = False
     i = 0
@@ -240,10 +252,11 @@ if __name__ == "__main__":
     # t1.join()
     # # # wait until thread 2 is completely executed
     # t2.join()
-    # helper(10, int(args[0]) * 10)
-    songs = Spotify()
-    print(songs.current_song_info(songs.get_current_song()))
-    print(songs.name(songs.get_current_song()))
+    csv_size = 50
+    
+    helper(csv_size, int(args[0]) * csv_size)
+    # songs = Spotify()
+    # print(songs.get_genre())
   
     # both threads completely executed
     # print("Done!")
