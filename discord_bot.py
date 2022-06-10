@@ -11,6 +11,8 @@ import subprocess
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
+
+
 bot = commands.Bot(command_prefix='!')
 
 @bot.command(name='queue')
@@ -18,6 +20,8 @@ async def queue(ctx, arg):
     # helper(10,100)
     subprocess.run(["python3", "spotify_methods.py", arg])
     await ctx.send("{} songs added to your queue.".format(arg))
+
+
 bot.run(TOKEN)
 # client = discord.Client()
 
