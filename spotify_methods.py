@@ -197,6 +197,8 @@ def helper(interval, num_songs):
     song = Spotify()
     genres = song.get_genre()
     genre = random.choice(genres).lower()
+    if len(genres) == 0:
+        genre = random.choice(["hip-hop", "pop"])
     total_num_songs = 0
     end = False
     i = 0
@@ -206,7 +208,7 @@ def helper(interval, num_songs):
         song.create_csv([genre], [], i, j)
         ind = Spotify.num_csvs - 1
         csv = "temp_data/Songs{}.csv".format(ind)
-        try: 
+        if 0==0: #try: 
             songs = pd.read_csv(csv)
             shape = songs.shape
             result = pd.DataFrame(similar_songs(songs, min(shape[0], 1)))
@@ -221,8 +223,8 @@ def helper(interval, num_songs):
             else:
                 result.to_csv("Queue.csv", index = False)
             song.add_to_queue(list(result.Song_ID))
-        except:
-            print("-")
+        # except:
+        #     print("-")
         # if total_num_songs >= num_songs // interval:
         #     temp_random = pd.read_csv("Queue.csv")
         #     temp_random = temp_random[:num_songs//interval].to_csv("Queue.csv", index = False)
@@ -252,7 +254,7 @@ if __name__ == "__main__":
     # t1.join()
     # # # wait until thread 2 is completely executed
     # t2.join()
-    csv_size = 50
+    csv_size = 25
     
     helper(csv_size, int(args[0]) * csv_size)
     # songs = Spotify()
